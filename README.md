@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔬 Laboratorium Virtual Termodinamika - Gas Ideal & Proses Termodinamika</title>
+    <title>🔬 Simulasi Gas Ideal SMA - Lebih Unggul dari PhET</title>
     <style>
         * {
             box-sizing: border-box;
@@ -106,6 +106,7 @@
             margin-bottom: 3rem;
             color: #b0b3c1;
             max-width: 600px;
+            line-height: 1.6;
         }
         
         .cta-button {
@@ -128,9 +129,9 @@
             box-shadow: 0 15px 40px rgba(255,215,0,0.6);
         }
 
-        /* Page 2: Materi */
+        /* Page 2: Materi SMA */
         .materi-page {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 3rem 2rem;
         }
@@ -146,7 +147,7 @@
         
         .materi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
             margin-bottom: 3rem;
         }
@@ -188,10 +189,21 @@
             margin-bottom: 1rem;
             color: #ffd700;
         }
+        
+        .formula {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 1.2rem;
+            text-align: center;
+            border-left: 5px solid #ffd700;
+        }
 
         /* Page 3: Simulasi */
         .simulasi-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -213,32 +225,44 @@
             background: rgba(255,255,255,0.1);
             border: 2px solid #4facfe;
             color: #e0e6ed;
-            padding: 0.8rem 1.5rem;
+            padding: 1rem 1.5rem;
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 600;
+            font-size: 1rem;
         }
         
         .process-btn.active {
             background: linear-gradient(45deg, #4facfe, #00f2fe);
             color: #1a1a2e;
             box-shadow: 0 5px 15px rgba(79,172,254,0.4);
+            transform: scale(1.05);
         }
         
-        /* Canvas container sama seperti sebelumnya */
         .canvas-container {
             background: #0b1421;
             border-radius: 32px;
-            padding: 10px;
+            padding: 20px;
             box-shadow: inset 0 -3px 8px #00000099, 0 12px 25px black;
-            border: 1px solid #6a7ca0;
+            border: 2px solid #6a7ca0;
             margin-bottom: 2rem;
         }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: radial-gradient(circle at 30% 30%, #25344f, #101624);
+            border-radius: 24px;
+            cursor: pointer;
+            border: 2px solid #5f73a1;
+            transition: all 0.2s;
+        }
 
-        /* LKPD Page */
+        /* LKPD */
         .lkpd-container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 3rem 2rem;
         }
@@ -251,6 +275,17 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
         
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .form-section h3 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+        
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -259,24 +294,26 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: #ffd700;
+            color: #e0e6ed;
         }
         
         .form-group input, .form-group textarea, .form-group select {
             width: 100%;
-            padding: 0.8rem;
+            padding: 1rem;
             border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 10px;
+            border-radius: 12px;
             background: rgba(255,255,255,0.05);
             color: #e0e6ed;
             font-size: 1rem;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
         
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
             outline: none;
             border-color: #4facfe;
-            box-shadow: 0 0 10px rgba(79,172,254,0.3);
+            box-shadow: 0 0 15px rgba(79,172,254,0.3);
+            background: rgba(255,255,255,0.1);
         }
         
         .submit-btn {
@@ -284,36 +321,32 @@
             background: linear-gradient(45deg, #4facfe, #00f2fe);
             color: #1a1a2e;
             border: none;
-            padding: 1rem;
-            font-size: 1.2rem;
+            padding: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 700;
             border-radius: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .submit-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(79,172,254,0.4);
-        }
-        
-        .submit-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(79,172,254,0.5);
         }
 
-        /* Real-time monitoring */
         .monitoring-panel {
             background: rgba(255,255,255,0.03);
             border-radius: 15px;
             padding: 1.5rem;
             margin-top: 2rem;
-            border: 1px solid rgba(255,215,0,0.2);
+            border: 1px solid rgba(255,215,0,0.3);
         }
         
         .monitoring-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1rem;
         }
         
@@ -321,23 +354,25 @@
             text-align: center;
             padding: 1rem;
             background: rgba(255,255,255,0.05);
-            border-radius: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .monitor-label {
+            font-size: 0.9rem;
+            color: #b0b3c1;
+            margin-bottom: 0.5rem;
         }
         
         .monitor-value {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #ffd700;
         }
 
         @media (max-width: 768px) {
-            .materi-grid {
-                grid-template-columns: 1fr;
-            }
-            .process-selector {
-                flex-direction: column;
-                align-items: center;
-            }
+            .materi-grid { grid-template-columns: 1fr; }
+            .process-selector { flex-direction: column; align-items: center; }
         }
     </style>
 </head>
@@ -345,7 +380,7 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">🔬 Lab Virtual Termodinamika</div>
+            <div class="logo">🔬 Simulasi Gas Ideal SMA</div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
@@ -356,119 +391,98 @@
     <!-- Page 1: Landing -->
     <div id="page1" class="page-container active">
         <div class="landing">
-            <h1 class="hero-title">Laboratorium Virtual Termodinamika</h1>
+            <h1 class="hero-title">Simulasi Gas Ideal</h1>
             <p class="hero-subtitle">
-                Pelajari Gas Ideal, Proses Isochoric, Isobaric, Isothermal dengan simulasi interaktif 
-                yang lebih canggih dari PhET. Lengkap dengan LKPD online real-time!
+                Pelajari <strong>Teori Kinetik Gas</strong>, <strong>Gas Ideal</strong>, dan <strong>3 Proses Termodinamika</strong> 
+                (Isokhorik, Isobarik, Isotermal) dengan simulasi interaktif 100% sesuai kurikulum SMA.
             </p>
-            <button class="cta-button" onclick="nextPage()">🚀 Mulai Belajar</button>
+            <button class="cta-button" onclick="nextPage()">🚀 Mulai Simulasi</button>
         </div>
     </div>
 
-    <!-- Page 2: Materi -->
+    <!-- Page 2: Materi SMA -->
     <div id="page2" class="page-container materi-page">
-        <h2 class="section-title">📚 Materi Pembelajaran</h2>
+        <h2 class="section-title">📚 Materi SMA Kelas XII</h2>
+        
         <div class="materi-grid">
             <div class="materi-card">
                 <span class="materi-icon">⚛️</span>
-                <h3>Gas Ideal</h3>
-                <p><strong>Persamaan Gas Ideal:</strong> PV = nRT</p>
-                <ul style="margin-top: 1rem;">
+                <h3>Teori Kinetik Gas</h3>
+                <p><strong>Gas Ideal:</strong> partikel bergerak acak, tidak berinteraksi, tumbukan elastis</p>
+                <div class="formula">P = ⅓ ρ v_rms²</div>
+                <p><strong>Hubungan Suhu:</strong> T ↑ → v_rms ↑ → P ↑</p>
+            </div>
+            
+            <div class="materi-card">
+                <span class="materi-icon">📐</span>
+                <h3>Persamaan Gas Ideal</h3>
+                <div class="formula">PV = nRT</div>
+                <p><strong>R = 8,31 J/mol·K</strong></p>
+                <ul style="margin-top: 1rem; padding-left: 1.5rem;">
                     <li>P → Tekanan (Pa)</li>
                     <li>V → Volume (m³)</li>
-                    <li>n → Jumlah mol</li>
-                    <li>R → 8.314 J/mol·K</li>
                     <li>T → Suhu (K)</li>
                 </ul>
             </div>
+            
             <div class="materi-card">
                 <span class="materi-icon">🔄</span>
-                <h3>Proses Isothermal</h3>
-                <p>Suhu konstan (ΔT = 0)</p>
-                <ul style="margin-top: 1rem;">
-                    <li>PV = konstan</li>
-                    <li>W = nRT ln(V₂/V₁)</li>
-                    <li>ΔU = 0</li>
-                    <li>Q = W</li>
-                </ul>
+                <h3>Proses Isotermal</h3>
+                <p><strong>Suhu TETAP (ΔT = 0)</strong></p>
+                <div class="formula">P₁V₁ = P₂V₂</div>
+                <p><strong>Grafik:</strong> Hiperbola PV = konstan</p>
             </div>
+            
             <div class="materi-card">
                 <span class="materi-icon">📏</span>
-                <h3>Proses Isobaric</h3>
-                <p>Tekanan konstan (ΔP = 0)</p>
-                <ul style="margin-top: 1rem;">
-                    <li>V/T = konstan</li>
-                    <li>W = PΔV</li>
-                    <li>ΔU = nCᵥΔT</li>
-                    <li>Q = nCₚΔT</li>
-                </ul>
+                <h3>Proses Isobarik</h3>
+                <p><strong>Tekanan TETAP (ΔP = 0)</strong></p>
+                <div class="formula">V/T = konstan</div>
+                <p><strong>Grafik:</strong> Garis lurus V-T</p>
             </div>
+            
             <div class="materi-card">
                 <span class="materi-icon">📦</span>
-                <h3>Proses Isochoric</h3>
-                <p>Volume konstan (ΔV = 0)</p>
-                <ul style="margin-top: 1rem;">
-                    <li>P/T = konstan</li>
-                    <li>W = 0</li>
-                    <li>ΔU = Q = nCᵥΔT</li>
-                </ul>
+                <h3>Proses Isokhorik</h3>
+                <p><strong>Volume TETAP (ΔV = 0)</strong></p>
+                <div class="formula">P/T = konstan</div>
+                <p><strong>Grafik:</strong> Garis lurus P-T</p>
             </div>
         </div>
+        
         <div style="text-align: center;">
-            <button class="cta-button" onclick="nextPage()" style="margin: 0 1rem;">➡️ Ke Simulasi</button>
-            <button class="cta-button" onclick="prevPage()" style="background: rgba(255,255,255,0.1); color: white;">⬅️ Kembali</button>
+            <button class="cta-button" onclick="nextPage()">➡️ Mulai Simulasi</button>
         </div>
     </div>
 
     <!-- Page 3: Simulasi -->
     <div id="page3" class="page-container simulasi-container">
         <div class="simulasi-header">
-            <h2 class="section-title">🎮 Simulasi Interaktif</h2>
-            <p>Pilih proses termodinamika yang ingin disimulasikan:</p>
-            <div class="process-selector">
+            <h2 class="section-title">🎮 Simulasi Proses Termodinamika</h2>
+            <div class="process-selector" id="processSelector">
                 <button class="process-btn active" data-process="free">Gerak Bebas</button>
-                <button class="process-btn" data-process="isothermal">Isothermal</button>
-                <button class="process-btn" data-process="isobaric">Isobaric</button>
-                <button class="process-btn" data-process="isochoric">Isochoric</button>
+                <button class="process-btn" data-process="isothermal">Isotermal</button>
+                <button class="process-btn" data-process="isobaric">Isobarik</button>
+                <button class="process-btn" data-process="isochoric">Isokhorik</button>
             </div>
         </div>
 
-        <!-- Canvas simulasi (kode asli yang diupgrade) -->
         <div class="canvas-container">
-            <canvas id="gasCanvas" width="1200" height="600"></canvas>
+            <canvas id="gasCanvas" width="1000" height="500"></canvas>
         </div>
 
-        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <button class="cta-button" onclick="nextPage()" style="padding: 0.8rem 2rem; font-size: 1rem;">📝 LKPD</button>
-            <button class="cta-button" onclick="prevPage()" style="background: rgba(255,255,255,0.1); color: white; padding: 0.8rem 2rem; font-size: 1rem;">⬅️ Kembali</button>
+        <div class="monitoring-panel">
+            <div class="monitoring-grid" id="monitoringGrid">
+                <!-- Diisi oleh JavaScript -->
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <button class="cta-button" onclick="nextPage()" style="padding: 1rem 2rem;">📝 Kerjakan LKPD</button>
         </div>
     </div>
 
     <!-- Page 4: LKPD -->
     <div id="page4" class="page-container">
         <div class="lkpd-container">
-            <h2 class="section-title" style="text-align: center; margin-bottom: 2rem;">📝 Lembar Kerja Praktikum Digital</h2>
-            
-            <form id="lkpdForm" class="lkpd-form">
-                <div class="form-group">
-                    <label>Nama Siswa *</label>
-                    <input type="text" id="nama" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Kelas *</label>
-                    <select id="kelas" required>
-                        <option value="">Pilih Kelas</option>
-                        <option value="X MIPA 1">X MIPA 1</option>
-                        <option value="X MIPA 2">X MIPA 2</option>
-                        <option value="X MIPA 3">X MIPA 3</option>
-                        <option value="XI MIPA 1">XI MIPA 1</option>
-                        <option value="XI MIPA 2">XI MIPA 2</option>
-                        <option value="XII MIPA 1">XII MIPA 1</option>
-                        <option value="XII MIPA 2">XII MIPA 2</option>
-                    </select>
-                </div>
-
-                <h3 style="color: #ffd700; margin: 2rem 0 1rem 0;">Observasi Simulasi</h3>
-                
-                <div class="
+            <h2 style="text-align: center; margin-bottom: 2rem;">📝 Lembar Kerja Prakt
