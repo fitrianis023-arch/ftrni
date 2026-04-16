@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Simulasi Gas Ideal | Termodinamika Interaktif</title>
+    <title>Simulasi Gas Ideal | Tekanan Realistis | Termodinamika</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
         }
 
         body {
             font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
-            background: linear-gradient(145deg, #0a0f1e 0%, #0f172a 100%);
+            background: linear-gradient(145deg, #0a0f1e 0%, #0b1120 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -22,116 +21,108 @@
             padding: 20px;
         }
 
-        /* Container Utama */
-        .sim-card {
-            max-width: 1300px;
+        .main-container {
+            max-width: 1400px;
             width: 100%;
-            background: rgba(15, 23, 42, 0.65);
+            background: rgba(15, 23, 42, 0.7);
             backdrop-filter: blur(12px);
-            border-radius: 2.5rem;
-            padding: 1.8rem;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.6), 0 0 0 1px rgba(250, 204, 21, 0.3);
-            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
+            border: 1px solid rgba(250, 204, 21, 0.3);
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             text-align: center;
             background: linear-gradient(135deg, #fbbf24, #38bdf8);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
         }
 
-        .sub {
+        .subhead {
             text-align: center;
             color: #94a3b8;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
+            font-size: 0.8rem;
+            margin-bottom: 1.2rem;
         }
 
-        /* Layout dua kolom: kiri simulasi, kanan kontrol */
-        .dashboard {
+        /* Layout 2 kolom */
+        .flex-dashboard {
             display: flex;
             flex-wrap: wrap;
             gap: 1.5rem;
         }
 
-        .sim-area {
+        .simulation-area {
             flex: 3;
             min-width: 580px;
         }
 
-        .control-panel {
-            flex: 1.5;
-            min-width: 260px;
-            background: #0f172ae6;
-            border-radius: 2rem;
+        .controls-area {
+            flex: 1.4;
+            min-width: 280px;
+            background: #0f172aee;
+            border-radius: 1.8rem;
             padding: 1.2rem;
-            backdrop-filter: blur(4px);
-            border: 1px solid #facc1533;
+            border: 1px solid #facc1544;
         }
 
         canvas {
             display: block;
             width: 100%;
-            background: #050a15;
-            border-radius: 1.8rem;
+            background: #030712;
+            border-radius: 1.5rem;
             border: 3px solid #facc15;
-            box-shadow: 0 20px 30px -10px black;
             cursor: grab;
+            box-shadow: 0 15px 25px -8px black;
         }
 
         canvas:active {
             cursor: grabbing;
         }
 
-        /* Statistik tekanan & ruang */
-        .pressure-gauge {
+        /* Pressure meter */
+        .pressure-meter {
             background: #020617;
-            border-radius: 2rem;
+            border-radius: 1.5rem;
             padding: 1rem;
             margin-top: 1rem;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             flex-wrap: wrap;
             gap: 12px;
+            align-items: center;
         }
 
-        .meter {
+        .gauge {
             background: #1e293b;
-            border-radius: 40px;
-            padding: 8px 20px;
+            border-radius: 60px;
+            padding: 6px 18px;
             font-weight: bold;
         }
 
-        .meter span {
+        .gauge span {
             color: #facc15;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 800;
         }
 
-        .ruang-visual {
+        .volume-badge {
             background: #0f172a;
-            border-radius: 1.5rem;
-            padding: 8px 15px;
-            text-align: center;
-            border-left: 5px solid #f59e0b;
+            padding: 6px 16px;
+            border-radius: 40px;
+            border-left: 4px solid #f59e0b;
         }
 
-        /* kontrol slider & tombol */
-        .slider-group {
+        /* Kontrol */
+        .control-group {
             margin-bottom: 1.2rem;
         }
 
-        .slider-group label {
+        .control-group label {
             display: flex;
             justify-content: space-between;
             color: #cbd5e1;
@@ -158,75 +149,49 @@
 
         .value-badge {
             background: #1e293b;
-            padding: 4px 12px;
+            padding: 2px 12px;
             border-radius: 30px;
             font-weight: bold;
             color: #facc15;
         }
 
-        .tombol-group {
+        .button-group {
             display: flex;
-            gap: 12px;
-            margin: 15px 0;
+            gap: 10px;
+            margin: 12px 0;
             flex-wrap: wrap;
         }
 
         button {
             background: #1e293b;
             border: none;
-            padding: 10px 18px;
-            border-radius: 50px;
-            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
             color: white;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            border: 1px solid #475569;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: 0.1s linear;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            border: 1px solid #475569;
+            gap: 6px;
         }
 
         button:active {
             transform: scale(0.96);
         }
 
-        .btn-warning {
+        .btn-primary {
             background: #f59e0b;
             color: #0f172a;
             border-color: #fbbf24;
         }
 
-        .btn-gas {
-            background: #0f172a;
-            border: 1px solid #38bdf8;
-        }
-
-        /* Petunjuk penggunaan */
-        .tutorial {
-            background: #020617aa;
-            border-radius: 1.5rem;
-            padding: 1rem;
-            margin-top: 1rem;
-            border: 1px dashed #facc15;
-        }
-
-        .tutorial h4 {
-            color: #facc15;
-            margin-bottom: 8px;
-            font-size: 1rem;
-            display: flex;
-            gap: 6px;
-        }
-
-        .tutorial ul {
-            padding-left: 1.3rem;
-            font-size: 0.85rem;
-            color: #cbd5e6;
-        }
-
-        .tutorial li {
-            margin: 6px 0;
+        .process-active {
+            background: #f59e0b !important;
+            color: #0f172a !important;
+            border-color: #fbbf24;
+            box-shadow: 0 0 8px #f59e0b;
         }
 
         hr {
@@ -234,91 +199,116 @@
             border-color: #334155;
         }
 
+        /* Petunjuk penggunaan (tanpa materi) */
+        .tutorial-box {
+            background: #020617aa;
+            border-radius: 1.2rem;
+            padding: 0.9rem;
+            margin-top: 1rem;
+            border: 1px dashed #facc1566;
+        }
+
+        .tutorial-box h4 {
+            color: #facc15;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .tutorial-box ul {
+            padding-left: 1.2rem;
+            font-size: 0.8rem;
+            color: #cbd5e6;
+        }
+
+        .tutorial-box li {
+            margin: 5px 0;
+        }
+
         @media (max-width: 900px) {
-            .sim-area { min-width: 100%; }
-            .dashboard { flex-direction: column; }
+            .simulation-area { min-width: 100%; }
+            .flex-dashboard { flex-direction: column; }
         }
     </style>
 </head>
 <body>
-<div class="sim-card">
-    <h1>
-        ⚛️ GAS IDEAL LAB
-        <span style="font-size: 0.8rem; background: #1e293b; padding: 4px 12px; border-radius: 60px;">PV = nRT</span>
-    </h1>
-    <div class="sub">Simulasi Isobarik · Isohorik · Isotermal | Tekanan & Partikel Realistis</div>
+<div class="main-container">
+    <h1>⚛️ GAS IDEAL LAB | PV = nRT</h1>
+    <div class="subhead">Simulasi Termodinamika | Tekanan Akurat | Proses Isohorik · Isobarik · Isotermal</div>
 
-    <div class="dashboard">
-        <!-- KIRI: AREA SIMULASI + RUANG -->
-        <div class="sim-area">
-            <canvas id="gasCanvas" width="900" height="450" style="width:100%; height:auto; background:#050a15"></canvas>
+    <div class="flex-dashboard">
+        <!-- AREA SIMULASI -->
+        <div class="simulation-area">
+            <canvas id="gasCanvas" width="950" height="470" style="width:100%; height:auto; background:#030712"></canvas>
             
-            <!-- Panel tekanan & visual ruang -->
-            <div class="pressure-gauge">
-                <div class="meter">📊 TEKANAN (P) = <span id="pressureValue">0.00</span> atm</div>
-                <div class="meter">🌡️ SUHU = <span id="tempDisplay">300</span> K</div>
-                <div class="ruang-visual">📦 VOLUME RUANG = <span id="volumeDisplay">5.0</span> L</div>
+            <div class="pressure-meter">
+                <div class="gauge">📊 TEKANAN = <span id="pressureValue">0.00</span> atm</div>
+                <div class="gauge">🌡️ SUHU = <span id="tempValueDisplay">300</span> K</div>
+                <div class="volume-badge">📦 VOLUME = <span id="volumeValueDisplay">5.0</span> L</div>
+                <div class="gauge">🔢 JUMLAH PARTIKEL = <span id="partikelJumlahDisplay">24</span></div>
             </div>
-            <div style="margin-top: 10px; font-size:0.75rem; text-align:center; color:#7e8aa2;">
-                💡 Geser kursor di area partikel → dorong partikel secara interaktif
+            <div style="font-size: 0.7rem; text-align: center; margin-top: 8px; color: #6b7280;">
+                ✨ Geser mouse di area partikel untuk mendorong | Tekanan dihitung real-time dari PV=nRT
             </div>
         </div>
 
-        <!-- KANAN: KONTROL & PETUNJUK -->
-        <div class="control-panel">
-            <div class="slider-group">
-                <label>🌡️ SUHU (Kelvin) <span id="tempValLabel" class="value-badge">300 K</span></label>
-                <input type="range" id="tempSlider" min="50" max="800" value="300" step="1">
-            </div>
-            <div class="slider-group">
-                <label>📦 VOLUME RUANG (Liter) <span id="volValLabel" class="value-badge">5.0 L</span></label>
-                <input type="range" id="volumeSlider" min="2.0" max="12.0" value="5.0" step="0.2">
+        <!-- PANEL KONTROL & PETUNJUK -->
+        <div class="controls-area">
+            <!-- SLIDER SUHU -->
+            <div class="control-group">
+                <label>🌡️ SUHU (Kelvin) <span id="tempSliderLabel" class="value-badge">300 K</span></label>
+                <input type="range" id="suhuSlider" min="50" max="800" value="300" step="1">
             </div>
 
-            <!-- Jenis Partikel: Monoatomik / Diatomik -->
-            <div class="slider-group">
+            <!-- SLIDER VOLUME -->
+            <div class="control-group">
+                <label>📦 VOLUME RUANG (Liter) <span id="volSliderLabel" class="value-badge">5.0 L</span></label>
+                <input type="range" id="volumeSlider" min="1.5" max="12.0" value="5.0" step="0.1">
+            </div>
+
+            <!-- JENIS PARTIKEL -->
+            <div class="control-group">
                 <label>🧪 JENIS PARTIKEL</label>
-                <div class="tombol-group" style="justify-content: space-between;">
-                    <button id="monoBtn" class="btn-gas" style="background:#facc15; color:#0f172a;">⚛️ Monoatomik</button>
-                    <button id="diBtn" class="btn-gas">🔗 Diatomik (N₂/O₂)</button>
+                <div class="button-group">
+                    <button id="monoBtn" style="background:#facc15; color:#0f172a;">⚛️ Monoatomik (He)</button>
+                    <button id="diBtn">🔗 Diatomik (N₂/O₂)</button>
                 </div>
             </div>
 
-            <!-- JUMLAH PARTIKEL + TOMBOL +/– -->
-            <div class="slider-group">
-                <label>🔢 JUMLAH PARTIKEL (n ~ N) <span id="partCountLabel" class="value-badge">24</span></label>
-                <div class="tombol-group">
-                    <button id="kurangPartikelBtn" style="background:#ef4444;">➖ Kurangi</button>
-                    <button id="tambahPartikelBtn" style="background:#22c55e;">➕ Tambah</button>
+            <!-- JUMLAH PARTIKEL dengan tombol +/- -->
+            <div class="control-group">
+                <label>🔢 JUMLAH PARTIKEL (n ~ N) <span id="partikelCountLabel" class="value-badge">24</span></label>
+                <div class="button-group">
+                    <button id="kurangiPartikel" style="background:#ef4444;">➖ Kurangi (2)</button>
+                    <button id="tambahPartikel" style="background:#22c55e;">➕ Tambah (2)</button>
                 </div>
-                <input type="range" id="partikelSlider" min="6" max="55" value="24" step="1" style="margin-top: 10px;">
+                <input type="range" id="partikelSlider" min="6" max="55" value="24" step="1" style="margin-top: 6px;">
             </div>
 
-            <!-- Pilih Proses Termodinamika -->
-            <div class="slider-group">
+            <!-- PROSES TERMODINAMIKA -->
+            <div class="control-group">
                 <label>⚙️ PROSES TERMODINAMIKA</label>
-                <div class="tombol-group">
-                    <button id="isohorikBtn" class="btn-warning">📌 Isohorik (V tetap)</button>
+                <div class="button-group">
+                    <button id="isohorikBtn" class="btn-primary">📌 Isohorik (V tetap)</button>
                     <button id="isobarikBtn">⚖️ Isobarik (P tetap)</button>
                     <button id="isotermalBtn">🌀 Isotermal (T tetap)</button>
                 </div>
             </div>
 
-            <button id="resetSimBtn" style="width:100%; background:#334155; margin-top:5px;">⟳ Reset ke Kondisi Awal (300K, 5L, 24 partikel)</button>
+            <button id="resetBtn" style="width:100%; background:#334155; margin: 5px 0;">⟳ RESET KE KONDISI AWAL</button>
             
             <hr>
-            <!-- PETUNJUK PENGGUNAAN SIMULASI (hanya cara pakai, tanpa materi) -->
-            <div class="tutorial">
+            <!-- PETUNJUK PENGGUNAAN (HANYA CARA PAKAI) -->
+            <div class="tutorial-box">
                 <h4>📖 PANDUAN PENGGUNAAN SIMULASI</h4>
                 <ul>
-                    <li>🖱️ <strong>Klik & drag</strong> di area partikel → mendorong partikel secara langsung.</li>
-                    <li>🌡️ <strong>Slider SUHU</strong> → mengubah energi kinetik partikel (gerak makin cepat).</li>
-                    <li>📦 <strong>Slider VOLUME</strong> → memperbesar/memperkecil ruang (tekanan otomatis berubah).</li>
-                    <li>🧬 <strong>Jenis Partikel</strong> : Monoatomik (He, Ne) atau Diatomik (N₂, O₂) berpengaruh pada derajat kebebasan & energi.</li>
-                    <li>➕/➖ <strong>Tambah/Kurangi partikel</strong> → jumlah gas berubah, tekanan ikut teori gas ideal.</li>
-                    <li>⚙️ <strong>Pilih Proses</strong> : Isohorik (V tetap), Isobarik (P tetap), Isotermal (T tetap) → parameter akan terkunci sesuai proses.</li>
-                    <li>🔄 Tombol Reset mengembalikan semua ke nilai awal.</li>
-                    <li>📊 Tekanan, suhu, volume selalu sinkron dengan persamaan <strong>PV = nRT</strong>.</li>
+                    <li><strong>🖱️ Klik & drag</strong> pada area partikel → mendorong partikel secara langsung.</li>
+                    <li><strong>🌡️ Slider SUHU</strong> → mengubah temperatur gas, partikel bergerak lebih cepat/ lambat.</li>
+                    <li><strong>📦 Slider VOLUME</strong> → memperbesar/memperkecil ruang, tekanan berubah otomatis.</li>
+                    <li><strong>🧬 Jenis Partikel</strong> : Monoatomik / Diatomik (mempengaruhi energi kinetik).</li>
+                    <li><strong>➕/➖ Tombol partikel</strong> → menambah/mengurangi jumlah partikel gas.</li>
+                    <li><strong>⚙️ Proses</strong> : Isohorik (V tetap), Isobarik (P tetap), Isotermal (T tetap) → parameter terkunci sesuai hukum gas.</li>
+                    <li><strong>🔄 Reset</strong> mengembalikan semua nilai ke 300K, 5L, 24 partikel, proses isohorik.</li>
+                    <li><strong>📊 Tekanan</strong> dihitung dari <strong>PV = nRT</strong> (n sebanding jumlah partikel).</li>
                 </ul>
             </div>
         </div>
@@ -330,152 +320,144 @@
         // CANVAS
         const canvas = document.getElementById('gasCanvas');
         const ctx = canvas.getContext('2d');
-        let W = 900, H = 450;
+        let W = 950, H = 470;
         canvas.width = W; canvas.height = H;
-
-        // ---------- PARAMETER GAS IDEAL ----------
+        
+        // ========== VARIABEL GAS IDEAL ==========
+        let jumlahPartikel = 24;      // N (sebanding n)
+        let suhu = 300;               // Kelvin
+        let volume = 5.0;             // Liter
+        let tekanan = 1.0;            // atm
+        
+        let proses = "isohorik";      // isohorik, isobarik, isotermal
+        let jenisGas = "mono";        // mono atau di
+        
+        const RADIUS = 6;
+        const REF_SPEED_300K = 3.6;   // px/frame pada 300K
+        
+        // partikel array
         let particles = [];
-        let jumlahPartikel = 24;       // N (sebanding dengan n)
-        let suhuKelvin = 300;          // T (K)
-        let volumeLiter = 5.0;         // V (L)
-        let tekananAtm = 1.0;          // P (atm) dihitung
         
-        let prosesAktif = "isohorik";   // 'isohorik', 'isobarik', 'isotermal'
-        let jenisGas = "mono";          // 'mono' atau 'di' (diatomik)
-        
-        const RADIUS_PARTIKEL = 6;
-        const REF_SPEED_AT_300K = 3.4;   // kecepatan referensi pada 300K (px/frame)
-        
-        // konstanta skala untuk PV = nRT (R semu)
-        // n sebanding jumlahPartikel, kita set P = (n * T) / V dalam satuan relatif (atm)
+        // ========== FUNGSI TEKANAN REALISTIS (PV = nRT) ==========
+        // n sebanding dengan jumlahPartikel / 20 (normalisasi)
         function hitungTekanan() {
-            // n_eff = jumlahPartikel / 20 (normalisasi)
-            let nEff = jumlahPartikel / 20;
-            let P = (nEff * suhuKelvin) / volumeLiter;
-            P = Math.max(0.08, Math.min(8.0, P));
-            tekananAtm = parseFloat(P.toFixed(3));
-            return tekananAtm;
+            // n_eff sebanding jumlah partikel (skala 20 partikel = 1 mol relatif)
+            let n_eff = jumlahPartikel / 20.0;
+            // R semu = 0.0821 (L·atm/(mol·K)) tapi kita skala untuk tampilan realistic 1-8 atm
+            // Agar pada 300K, 5L, 24 partikel => tekanan sekitar 1.97 atm (masuk akal)
+            let R_semu = 0.0821;
+            let P = (n_eff * R_semu * suhu) / volume;
+            P = Math.min(12.0, Math.max(0.15, P));
+            tekanan = parseFloat(P.toFixed(3));
+            return tekanan;
         }
         
-        // update seluruh tampilan nilai & sinkronisasi proses
-        function updateUIAndConstraints() {
-            // update display angka
-            document.getElementById('pressureValue').innerText = tekananAtm.toFixed(2);
-            document.getElementById('tempDisplay').innerText = Math.round(suhuKelvin);
-            document.getElementById('volumeDisplay').innerText = volumeLiter.toFixed(1);
-            document.getElementById('tempValLabel').innerHTML = Math.round(suhuKelvin) + " K";
-            document.getElementById('volValLabel').innerHTML = volumeLiter.toFixed(1) + " L";
-            document.getElementById('partCountLabel').innerHTML = jumlahPartikel;
+        // sinkronkan semua tampilan & terapkan batasan proses
+        function sinkronkanUI() {
+            document.getElementById('pressureValue').innerText = tekanan.toFixed(2);
+            document.getElementById('tempValueDisplay').innerText = Math.round(suhu);
+            document.getElementById('volumeValueDisplay').innerText = volume.toFixed(1);
+            document.getElementById('partikelJumlahDisplay').innerText = jumlahPartikel;
+            document.getElementById('suhuSlider').value = suhu;
+            document.getElementById('volumeSlider').value = volume;
             document.getElementById('partikelSlider').value = jumlahPartikel;
-            document.getElementById('tempSlider').value = suhuKelvin;
-            document.getElementById('volumeSlider').value = volumeLiter;
-            
-            // Terapkan batasan proses termodinamika (menjaga kondisi)
-            if(prosesAktif === "isohorik") {
-                // volume tetap: tidak ada perubahan volume via slider eksternal? tetap sinkron
-                volumeLiter = parseFloat(document.getElementById('volumeSlider').value);
-                hitungTekanan();
-            }
-            else if(prosesAktif === "isobarik") {
-                // Tekanan tetap -> V/T = konstan, maka V = (P tetap)* ... 
-                // agar P konstan, volume harus proporsional terhadap suhu
-                let P_target = tekananAtm;
-                let nEff = jumlahPartikel / 20;
-                // dari P = nRT/V => V = nRT/P
-                let newVolume = (nEff * suhuKelvin) / P_target;
-                newVolume = Math.min(12.0, Math.max(2.0, newVolume));
-                volumeLiter = parseFloat(newVolume.toFixed(2));
-                document.getElementById('volumeSlider').value = volumeLiter;
-                hitungTekanan();
-            }
-            else if(prosesAktif === "isotermal") {
-                // suhu tetap, P*V konstan
-                let konstantaPV = tekananAtm * volumeLiter;
-                let newVol = volumeLiter;
-                let newP = konstantaPV / newVol;
-                tekananAtm = newP;
-                // suhu di slider jangan berubah, karena isotermal
-                suhuKelvin = parseFloat(document.getElementById('tempSlider').value);
-                document.getElementById('tempDisplay').innerText = Math.round(suhuKelvin);
-                hitungTekanan();
-            }
-            // update slider volume & suhu agar sesuai
-            document.getElementById('volValLabel').innerHTML = volumeLiter.toFixed(1) + " L";
-            document.getElementById('tempValLabel').innerHTML = Math.round(suhuKelvin) + " K";
-            document.getElementById('pressureValue').innerText = tekananAtm.toFixed(2);
+            document.getElementById('tempSliderLabel').innerHTML = Math.round(suhu) + " K";
+            document.getElementById('volSliderLabel').innerHTML = volume.toFixed(1) + " L";
+            document.getElementById('partikelCountLabel').innerHTML = jumlahPartikel;
         }
         
-        // Fungsi kecepatan partikel berdasarkan suhu (teori kinetik gas)
+        // batasan proses termodinamika (menjaga kondisi)
+        function terapkanBatasanProses() {
+            if(proses === "isohorik") {
+                // Volume tetap: tidak diubah, hitung tekanan dari suhu & jumlah partikel
+                volume = parseFloat(document.getElementById('volumeSlider').value);
+                hitungTekanan();
+            }
+            else if(proses === "isobarik") {
+                // Tekanan tetap: pertahankan tekanan saat ini, sesuaikan volume agar P konstan
+                let targetP = tekanan;
+                let n_eff = jumlahPartikel / 20.0;
+                let R_semu = 0.0821;
+                // V = nRT / P
+                let newVolume = (n_eff * R_semu * suhu) / targetP;
+                newVolume = Math.min(12.0, Math.max(1.5, newVolume));
+                volume = parseFloat(newVolume.toFixed(2));
+                document.getElementById('volumeSlider').value = volume;
+                hitungTekanan();
+            }
+            else if(proses === "isotermal") {
+                // Suhu tetap: P*V konstan, volume bisa berubah, tekanan menyesuaikan
+                let n_eff = jumlahPartikel / 20.0;
+                let R_semu = 0.0821;
+                let P_konstan = (n_eff * R_semu * suhu) / volume;
+                tekanan = P_konstan;
+            }
+            sinkronkanUI();
+        }
+        
+        // update kecepatan partikel berdasarkan suhu (teori kinetik)
         function updateKecepatanDariSuhu() {
-            let faktorKecepatan = Math.sqrt(suhuKelvin / 300);
-            if(suhuKelvin <= 0) faktorKecepatan = 0;
+            let faktor = Math.sqrt(suhu / 300);
+            if(suhu <= 0) faktor = 0;
             for(let p of particles) {
-                let speedNow = Math.hypot(p.vx, p.vy);
-                if(speedNow < 0.05 && faktorKecepatan > 0) {
+                let speed = Math.hypot(p.vx, p.vy);
+                if(speed < 0.05 && faktor > 0) {
                     let angle = Math.random() * 2 * Math.PI;
-                    let newSpd = REF_SPEED_AT_300K * faktorKecepatan * (0.7 + Math.random()*0.6);
+                    let newSpd = REF_SPEED_300K * faktor * (0.65 + Math.random()*0.7);
                     p.vx = Math.cos(angle) * newSpd;
                     p.vy = Math.sin(angle) * newSpd;
-                } else if(speedNow > 0.01) {
-                    let targetSpd = REF_SPEED_AT_300K * faktorKecepatan;
-                    let scale = targetSpd / speedNow;
+                } else if(speed > 0.01) {
+                    let targetSpd = REF_SPEED_300K * faktor;
+                    let scale = targetSpd / speed;
                     p.vx *= scale;
                     p.vy *= scale;
                 }
             }
         }
         
-        // Inisialisasi / reset partikel
-        function initParticles(count, suhu, volume) {
-            let newParts = [];
-            let faktorSpd = Math.sqrt(suhu / 300);
+        // inisialisasi / reset partikel
+        function initParticles(count, suhuAwal) {
+            let parts = [];
+            let faktor = Math.sqrt(suhuAwal / 300);
             for(let i=0; i<count; i++) {
-                let x = Math.random() * (W - 2*RADIUS_PARTIKEL) + RADIUS_PARTIKEL;
-                let y = Math.random() * (H - 2*RADIUS_PARTIKEL) + RADIUS_PARTIKEL;
+                let x = Math.random() * (W - 2*RADIUS) + RADIUS;
+                let y = Math.random() * (H - 2*RADIUS) + RADIUS;
                 let angle = Math.random() * 2 * Math.PI;
-                let speed = REF_SPEED_AT_300K * faktorSpd * (0.6 + Math.random() * 0.8);
-                let vx = Math.cos(angle) * speed;
-                let vy = Math.sin(angle) * speed;
-                newParts.push({x, y, vx, vy, r: RADIUS_PARTIKEL});
+                let speed = REF_SPEED_300K * faktor * (0.6 + Math.random() * 0.8);
+                parts.push({
+                    x, y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    r: RADIUS
+                });
             }
-            return newParts;
+            return parts;
         }
         
-        // Mengubah jumlah partikel (teori: tekanan berbanding lurus dgn jumlah)
-        function setJumlahPartikel(newCount) {
+        // mengubah jumlah partikel
+        function ubahJumlahPartikel(newCount) {
             newCount = Math.min(55, Math.max(6, newCount));
             let diff = newCount - particles.length;
             if(diff > 0) {
-                let faktor = Math.sqrt(suhuKelvin / 300);
+                let faktor = Math.sqrt(suhu / 300);
                 for(let i=0; i<diff; i++) {
-                    let x = Math.random() * (W - 2*RADIUS_PARTIKEL) + RADIUS_PARTIKEL;
-                    let y = Math.random() * (H - 2*RADIUS_PARTIKEL) + RADIUS_PARTIKEL;
+                    let x = Math.random() * (W - 2*RADIUS) + RADIUS;
+                    let y = Math.random() * (H - 2*RADIUS) + RADIUS;
                     let angle = Math.random() * 2 * Math.PI;
-                    let spd = REF_SPEED_AT_300K * faktor * (0.5 + Math.random());
-                    particles.push({x, y, vx: Math.cos(angle)*spd, vy: Math.sin(angle)*spd, r: RADIUS_PARTIKEL});
+                    let spd = REF_SPEED_300K * faktor * (0.6 + Math.random()*0.7);
+                    particles.push({x, y, vx: Math.cos(angle)*spd, vy: Math.sin(angle)*spd, r: RADIUS});
                 }
             } else if(diff < 0) {
                 particles.splice(newCount, -diff);
             }
             jumlahPartikel = particles.length;
             hitungTekanan();
-            updateUIAndConstraints();
-            document.getElementById('partCountLabel').innerHTML = jumlahPartikel;
-            document.getElementById('partikelSlider').value = jumlahPartikel;
+            sinkronkanUI();
+            terapkanBatasanProses();
         }
         
-        // Update keseluruhan parameter ketika slider berubah
-        function refreshSimulasi() {
-            hitungTekanan();
-            updateKecepatanDariSuhu();
-            updateUIAndConstraints();
-            // sesuaikan batasan proses
-            if(prosesAktif === "isobarik") updateUIAndConstraints();
-            if(prosesAktif === "isotermal") updateUIAndConstraints();
-        }
-        
-        // Fisika: gerak & tumbukan
-        function updateGerakPartikel() {
+        // FISIKA: gerak & tumbukan elastis
+        function updateFisika() {
             for(let p of particles) {
                 p.x += p.vx;
                 p.y += p.vy;
@@ -484,7 +466,7 @@
                 if(p.y - p.r < 0) { p.y = p.r; p.vy = -p.vy; }
                 if(p.y + p.r > H) { p.y = H - p.r; p.vy = -p.vy; }
             }
-            // tumbukan antar partikel (elastis)
+            // tumbukan antar partikel
             for(let i=0; i<particles.length; i++) {
                 for(let j=i+1; j<particles.length; j++) {
                     let p1=particles[i], p2=particles[j];
@@ -510,26 +492,24 @@
             }
         }
         
-        // GAMBAR PARTIKEL + efek jenis gas (warna berbeda untuk diatomik)
-        function drawSimulation() {
+        // GAMBAR
+        function draw() {
             ctx.clearRect(0, 0, W, H);
             ctx.strokeStyle = "#facc15";
             ctx.lineWidth = 3;
-            ctx.strokeRect(4, 4, W-8, H-8);
+            ctx.strokeRect(5, 5, W-10, H-10);
             
             for(let p of particles) {
-                // Warna partikel: emas untuk monoatomik, biru kehijauan untuk diatomik
-                let color1, color2;
+                let grad;
                 if(jenisGas === "mono") {
-                    color1 = "#ffd966";
-                    color2 = "#f59e0b";
+                    grad = ctx.createRadialGradient(p.x-2, p.y-2, 2, p.x, p.y, p.r);
+                    grad.addColorStop(0, "#ffd966");
+                    grad.addColorStop(1, "#f59e0b");
                 } else {
-                    color1 = "#5ee0fa";
-                    color2 = "#0ea5e9";
+                    grad = ctx.createRadialGradient(p.x-2, p.y-2, 2, p.x, p.y, p.r);
+                    grad.addColorStop(0, "#7dd3fc");
+                    grad.addColorStop(1, "#0284c7");
                 }
-                let grad = ctx.createRadialGradient(p.x-2, p.y-2, 2, p.x, p.y, p.r);
-                grad.addColorStop(0, color1);
-                grad.addColorStop(1, color2);
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.r-1, 0, 2*Math.PI);
                 ctx.fillStyle = grad;
@@ -537,116 +517,137 @@
                 ctx.strokeStyle = "white";
                 ctx.lineWidth = 1;
                 ctx.stroke();
-                
-                // efek visual untuk diatomik (sedikit oval)
+                // efek diatomik
                 if(jenisGas === "di") {
                     ctx.beginPath();
-                    ctx.ellipse(p.x+2, p.y-1, 2, 1.5, 0, 0, 2*Math.PI);
-                    ctx.fillStyle = "#b0f0ff";
+                    ctx.ellipse(p.x+2, p.y-1.5, 2.2, 1.5, 0, 0, 2*Math.PI);
+                    ctx.fillStyle = "#bae6fd";
                     ctx.fill();
                 }
             }
-            
-            // Tambahan info kecepatan rata2 di pojok (opsional)
-            let totalSpeed = particles.reduce((a,b)=> a + Math.hypot(b.vx,b.vy),0)/(particles.length||1);
-            ctx.font = "bold 12px 'Segoe UI'";
+            // info kecepatan rata2
+            let avgSpd = particles.reduce((a,b)=> a+Math.hypot(b.vx,b.vy),0)/(particles.length||1);
+            ctx.font = "bold 11px monospace";
             ctx.fillStyle = "#facc15";
-            ctx.shadowBlur = 0;
-            ctx.fillText(`⚡ v_avg: ${totalSpeed.toFixed(1)} px/f`, 15, 30);
+            ctx.fillText(`v_avg: ${avgSpd.toFixed(1)} px/f`, 12, 25);
         }
         
-        // =============== EVENT & LISTENER ===============
-        function bindControls() {
-            const tempSlider = document.getElementById('tempSlider');
-            const volSlider = document.getElementById('volumeSlider');
-            const partSlider = document.getElementById('partikelSlider');
-            const tambahBtn = document.getElementById('tambahPartikelBtn');
-            const kurangBtn = document.getElementById('kurangPartikelBtn');
-            const resetBtn = document.getElementById('resetSimBtn');
+        // ========== EVENT LISTENER ==========
+        function initEventListeners() {
+            const suhuSlider = document.getElementById('suhuSlider');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const partikelSlider = document.getElementById('partikelSlider');
+            const tambahBtn = document.getElementById('tambahPartikel');
+            const kurangBtn = document.getElementById('kurangiPartikel');
+            const resetBtn = document.getElementById('resetBtn');
             const monoBtn = document.getElementById('monoBtn');
             const diBtn = document.getElementById('diBtn');
             const isohorik = document.getElementById('isohorikBtn');
             const isobarik = document.getElementById('isobarikBtn');
             const isotermal = document.getElementById('isotermalBtn');
             
-            tempSlider.addEventListener('input', (e) => {
-                suhuKelvin = parseInt(e.target.value);
-                if(prosesAktif === "isotermal") {
-                    // isotermal: suhu tetap, tapi user boleh mengubah? paksa biarkan, tapi jaga P*V konstan
+            suhuSlider.addEventListener('input', (e) => {
+                suhu = parseInt(e.target.value);
+                if(proses === "isotermal") {
+                    // tetap pertahankan P*V konstan
                 }
-                refreshSimulasi();
-            });
-            volSlider.addEventListener('input', (e) => {
-                volumeLiter = parseFloat(e.target.value);
-                if(prosesAktif === "isohorik") volumeLiter = parseFloat(e.target.value);
-                else if(prosesAktif === "isobarik") {
-                    // akan disesuaikan di constraint
-                }
-                refreshSimulasi();
-            });
-            partSlider.addEventListener('input', (e) => {
-                let val = parseInt(e.target.value);
-                setJumlahPartikel(val);
-            });
-            tambahBtn.addEventListener('click', () => setJumlahPartikel(jumlahPartikel + 2));
-            kurangBtn.addEventListener('click', () => setJumlahPartikel(jumlahPartikel - 2));
-            
-            resetBtn.addEventListener('click', () => {
-                suhuKelvin = 300;
-                volumeLiter = 5.0;
-                jumlahPartikel = 24;
-                prosesAktif = "isohorik";
-                jenisGas = "mono";
-                particles = initParticles(jumlahPartikel, suhuKelvin, volumeLiter);
                 hitungTekanan();
                 updateKecepatanDariSuhu();
-                updateUIAndConstraints();
-                document.getElementById('tempSlider').value = 300;
+                terapkanBatasanProses();
+                sinkronkanUI();
+            });
+            
+            volumeSlider.addEventListener('input', (e) => {
+                volume = parseFloat(e.target.value);
+                if(proses === "isohorik") volume = parseFloat(e.target.value);
+                hitungTekanan();
+                terapkanBatasanProses();
+                sinkronkanUI();
+                updateKecepatanDariSuhu();
+            });
+            
+            partikelSlider.addEventListener('input', (e) => {
+                let val = parseInt(e.target.value);
+                ubahJumlahPartikel(val);
+            });
+            
+            tambahBtn.addEventListener('click', () => ubahJumlahPartikel(jumlahPartikel + 2));
+            kurangBtn.addEventListener('click', () => ubahJumlahPartikel(jumlahPartikel - 2));
+            
+            resetBtn.addEventListener('click', () => {
+                suhu = 300;
+                volume = 5.0;
+                jumlahPartikel = 24;
+                proses = "isohorik";
+                jenisGas = "mono";
+                particles = initParticles(jumlahPartikel, suhu);
+                hitungTekanan();
+                updateKecepatanDariSuhu();
+                sinkronkanUI();
+                terapkanBatasanProses();
+                document.getElementById('suhuSlider').value = 300;
                 document.getElementById('volumeSlider').value = 5.0;
                 document.getElementById('partikelSlider').value = 24;
-                // update tampilan tombol proses
-                document.querySelectorAll('#isohorikBtn, #isobarikBtn, #isotermalBtn').forEach(btn => btn.style.background = "#1e293b");
-                isohorik.style.background = "#f59e0b";
+                // reset style proses
+                isohorik.classList.add('btn-primary'); isohorik.classList.add('process-active');
+                isobarik.classList.remove('btn-primary', 'process-active');
+                isotermal.classList.remove('btn-primary', 'process-active');
+                isobarik.style.background = "#1e293b";
+                isotermal.style.background = "#1e293b";
+                monoBtn.style.background = "#facc15"; monoBtn.style.color = "#0f172a";
+                diBtn.style.background = "#1e293b"; diBtn.style.color = "white";
             });
             
             monoBtn.addEventListener('click', () => {
                 jenisGas = "mono";
                 monoBtn.style.background = "#facc15"; monoBtn.style.color = "#0f172a";
                 diBtn.style.background = "#1e293b"; diBtn.style.color = "white";
-                drawSimulation();
+                draw();
             });
             diBtn.addEventListener('click', () => {
                 jenisGas = "di";
                 diBtn.style.background = "#facc15"; diBtn.style.color = "#0f172a";
                 monoBtn.style.background = "#1e293b"; monoBtn.style.color = "white";
-                drawSimulation();
+                draw();
             });
             
             isohorik.addEventListener('click', () => {
-                prosesAktif = "isohorik";
-                isohorik.style.background = "#f59e0b"; isobarik.style.background = "#1e293b"; isotermal.style.background = "#1e293b";
-                refreshSimulasi();
+                proses = "isohorik";
+                isohorik.classList.add('btn-primary','process-active');
+                isobarik.classList.remove('btn-primary','process-active');
+                isotermal.classList.remove('btn-primary','process-active');
+                isobarik.style.background = "#1e293b";
+                isotermal.style.background = "#1e293b";
+                terapkanBatasanProses();
             });
             isobarik.addEventListener('click', () => {
-                prosesAktif = "isobarik";
-                isobarik.style.background = "#f59e0b"; isohorik.style.background = "#1e293b"; isotermal.style.background = "#1e293b";
-                refreshSimulasi();
+                proses = "isobarik";
+                isobarik.classList.add('btn-primary','process-active');
+                isohorik.classList.remove('btn-primary','process-active');
+                isotermal.classList.remove('btn-primary','process-active');
+                isohorik.style.background = "#1e293b";
+                isotermal.style.background = "#1e293b";
+                terapkanBatasanProses();
             });
             isotermal.addEventListener('click', () => {
-                prosesAktif = "isotermal";
-                isotermal.style.background = "#f59e0b"; isohorik.style.background = "#1e293b"; isobarik.style.background = "#1e293b";
-                refreshSimulasi();
+                proses = "isotermal";
+                isotermal.classList.add('btn-primary','process-active');
+                isohorik.classList.remove('btn-primary','process-active');
+                isobarik.classList.remove('btn-primary','process-active');
+                isohorik.style.background = "#1e293b";
+                isobarik.style.background = "#1e293b";
+                terapkanBatasanProses();
             });
         }
         
-        // Drag interaksi (dorong partikel)
-        let isDragging = false, lastMX=0, lastMY=0;
+        // DRAG interaksi
+        let isDragging = false, lastX=0, lastY=0;
         function setupDrag() {
             canvas.addEventListener('mousedown', (e) => {
                 const rect = canvas.getBoundingClientRect();
                 const sx = canvas.width/rect.width, sy = canvas.height/rect.height;
-                lastMX = (e.clientX - rect.left) * sx;
-                lastMY = (e.clientY - rect.top) * sy;
+                lastX = (e.clientX - rect.left)*sx;
+                lastY = (e.clientY - rect.top)*sy;
                 isDragging = true;
                 e.preventDefault();
             });
@@ -656,38 +657,39 @@
                 const sx = canvas.width/rect.width, sy = canvas.height/rect.height;
                 let mx = (e.clientX - rect.left)*sx;
                 let my = (e.clientY - rect.top)*sy;
-                let dx = mx - lastMX, dy = my - lastMY;
+                let dx = mx - lastX, dy = my - lastY;
                 for(let p of particles) {
                     let dist = Math.hypot(p.x - mx, p.y - my);
-                    if(dist < 65) {
-                        let force = 0.55 * (1 - dist/65);
+                    if(dist < 70) {
+                        let force = 0.55 * (1 - dist/70);
                         p.vx += dx * force;
                         p.vy += dy * force;
                     }
                 }
-                lastMX = mx; lastMY = my;
+                lastX = mx; lastY = my;
             });
             window.addEventListener('mouseup', () => isDragging = false);
         }
         
-        // Animasi utama
-        function animate() {
-            updateGerakPartikel();
-            drawSimulation();
-            requestAnimationFrame(animate);
+        // ANIMASI LOOP
+        function animasi() {
+            updateFisika();
+            draw();
+            requestAnimationFrame(animasi);
         }
         
-        // Inisialisasi awal
-        particles = initParticles(24, 300, 5.0);
+        // INIT
+        particles = initParticles(24, 300);
         jumlahPartikel = 24;
-        suhuKelvin = 300;
-        volumeLiter = 5.0;
+        suhu = 300;
+        volume = 5.0;
         hitungTekanan();
         updateKecepatanDariSuhu();
-        bindControls();
+        initEventListeners();
         setupDrag();
-        updateUIAndConstraints();
-        animate();
+        sinkronkanUI();
+        terapkanBatasanProses();
+        animasi();
     })();
 </script>
 </body>
