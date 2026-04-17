@@ -138,6 +138,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            color: #f0e6d0;
         }
 
         select, .atom-select {
@@ -177,6 +178,7 @@
             padding: 12px;
             text-align: center;
             border-left: 4px solid #ffb347;
+            color: #f5e6d3;
         }
 
         /* petunjuk penggunaan di dalam simulasi */
@@ -186,6 +188,7 @@
             padding: 15px 20px;
             margin-top: 20px;
             border: 1px dashed #ffbc6e;
+            color: #f0e6d0;
         }
 
         .usage-guide h4 {
@@ -220,6 +223,7 @@
             border: 2px solid #ffb347;
             margin: 12px 0;
             font-size: 1rem;
+            background: white;
         }
 
         .submit-lkpd {
@@ -229,6 +233,11 @@
             border-radius: 40px;
             font-weight: bold;
             cursor: pointer;
+            transition: 0.2s;
+        }
+        .submit-lkpd:hover {
+            background: #ffb347;
+            transform: scale(1.02);
         }
 
         .live-feedback {
@@ -237,12 +246,23 @@
             border-radius: 28px;
             margin-top: 20px;
         }
+        button {
+            cursor: pointer;
+        }
+        .reset-btn-sim {
+            background: #705a3c;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 <div class="app-container" id="appRoot">
     <div class="nav-buttons">
-        <button class="nav-btn" data-page="simulasi">🔥 SIMULASI GAS</button>
+        <button class="nav-btn active" data-page="simulasi">🔥 SIMULASI GAS</button>
         <button class="nav-btn" data-page="materi">📘 MATERI TERMODINAMIKA</button>
         <button class="nav-btn" data-page="lkpd">📝 LKPD INTERAKTIF</button>
     </div>
@@ -272,7 +292,7 @@
                                 <option value="Nitrogen">Nitrogen (N₂)</option>
                             </select>
                         </div>
-                        <button id="resetSimBtn" style="background:#705a3c;">⟳ Reset Partikel</button>
+                        <button id="resetSimBtn" class="reset-btn-sim">⟳ Reset Partikel</button>
                     </div>
                     <div class="slider-group">
                         <label>🌡️ SUHU (Kelvin) <span id="tempValue">300 K</span></label>
@@ -347,7 +367,7 @@
                 <div id="liveStatus" class="live-feedback" style="background:#fff0cf;">
                     ✅ Status: Jawaban akan tersimpan di penyimpanan lokal & dapat dibaca pemilik (refresh tetap ada). Guru / pemilik bisa melihat melalui console atau export.
                 </div>
-                <button id="exportDataBtn" style="margin-top: 10px; background:#4f6f8f;">📎 Ekspor Jawaban (Baca online)</button>
+                <button id="exportDataBtn" style="margin-top: 10px; background:#4f6f8f; border:none; padding:10px 20px; border-radius:40px; color:white; font-weight:bold;">📎 Ekspor Jawaban (Baca online)</button>
             </div>
             <div id="adminReadArea" style="margin-top: 20px; background:#e9e3d5; border-radius: 24px; padding: 12px; display: none;"></div>
         </div>
@@ -355,6 +375,40 @@
 </div>
 
 <script>
+    // ------------------- PERBAIKAN NAVIGASI HALAMAN (PASTIKAN BISA PINDAH) -------------------
+    const pages = document.querySelectorAll('.page');
+    const navBtns = document.querySelectorAll('.nav-btn');
+    
+    function switchPage(pageId) {
+        // Sembunyikan semua halaman
+        pages.forEach(page => {
+            page.classList.remove('active-page');
+        });
+        // Tampilkan halaman yang dipilih
+        const activePage = document.getElementById(pageId);
+        if (activePage) {
+            activePage.classList.add('active-page');
+        }
+        // Update class active pada tombol
+        navBtns.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-page') === pageId) {
+                btn.classList.add('active');
+            }
+        });
+    }
+    
+    // Event listener untuk setiap tombol navigasi
+    navBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const pageId = btn.getAttribute('data-page');
+            if (pageId) {
+                switchPage(pageId);
+            }
+        });
+    });
+    
     // ------------------- SIMULASI GAS IDEAL SUPERIOR (MONO/DIATOMIK, UNSUR) -------------------
     const canvas = document.getElementById('gasCanvas');
     const ctx = canvas.getContext('2d');
@@ -585,19 +639,6 @@
     updateMassFromType();
     animate();
     
-    // ------------------- HALAMAN NAVIGASI -------------------
-    const pages = document.querySelectorAll('.page');
-    const navBtns = document.querySelectorAll('.nav-btn');
-    navBtns.forEach(btn=>{
-        btn.addEventListener('click',()=>{
-            let pageId = btn.getAttribute('data-page');
-            pages.forEach(p=>p.classList.remove('active-page'));
-            document.getElementById(pageId).classList.add('active-page');
-            navBtns.forEach(b=>b.classList.remove('active'));
-            btn.classList.add('active');
-        });
-    });
-    
     // ------------------- LKPD ONLINE (tersimpan & terbaca pemilik) -------------------
     function loadLkpdData(){
         document.getElementById('rumusanMasalah').value = localStorage.getItem('lkpd_rumusan') || '';
@@ -624,8 +665,8 @@
         };
         let area = document.getElementById('adminReadArea');
         area.style.display = 'block';
-        area.innerHTML = `<strong>📋 DATA JAWABAN SISWA (online)</strong><br><pre>${JSON.stringify(data, null, 2)}</pre><button id="copyDataBtn">Salin ke Clipboard</button>`;
-        document.getElementById('copyDataBtn')?.addEventListener('click',()=>{ navigator.clipboard.writeText(JSON.stringify(data,null,2)); alert('Data disalin'); });
+        area.innerHTML = `<strong>📋 DATA JAWABAN SISWA (online)</strong><br><pre style="background:#fff; padding:12px; border-radius:16px;">${JSON.stringify(data, null, 2)}</pre><button id="copyDataBtn" style="margin-top:8px; padding:8px 16px; border-radius:32px; background:#ffb347; border:none;">Salin ke Clipboard</button>`;
+        document.getElementById('copyDataBtn')?.addEventListener('click',()=>{ navigator.clipboard.writeText(JSON.stringify(data,null,2)); alert('Data disalin ke clipboard'); });
     });
     loadLkpdData();
 </script>
