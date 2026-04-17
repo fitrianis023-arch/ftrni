@@ -1,5 +1,3 @@
-Berikut adalah kode HTML untuk simulasi interaktif yang menggabungkan eksplorasi mandiri siswa tentang proses termodinamika (isobarik, isokhorik, isotermal, dan gas ideal), dilengkapi dengan panduan, simulasi estetik, serta LKPD online yang dapat dipantau hasilnya.
-```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
